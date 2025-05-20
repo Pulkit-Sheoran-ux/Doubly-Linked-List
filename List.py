@@ -29,28 +29,38 @@ class DoublyLinkedList:
 
     def is_custom_palindrome(self):
         vowels = {'a', 'e', 'i', 'o', 'u'}
-        seen = set()
+        seen_left = set()
+        seen_right = set()
 
-        fwd = ""
-        current = self.head
-        while current:
-            ch = current.data
-            if ch not in vowels and ch not in seen and ch.isalpha():
-                fwd = fwd + ch
-                seen.add(ch)
-            current = current.next
+        left = self.head
+        right = self.tail
 
-        bwd = ""
-        seen.clear()
-        current = self.tail
-        while current:
-            ch = current.data
-            if ch not in vowels and ch not in seen and ch.isalpha():
-                bwd = bwd + ch
-                seen.add(ch)
-            current = current.prev
+        while left and right:
+            while left and (left.data in vowels or left.data in seen_left):
+                seen_left.add(left.data)
+                left = left.next
+            
+            while right and (right.data in vowels or right.data in seen_right):
+                seen_right.add(right.data)
+                right = right.prev
 
-        return fwd == bwd
+            if not left or not right:
+                break
+
+            left_char = left.data
+            right_char = right.data
+
+            if left_char != right_char:
+                return False
+
+            seen_left.add(left_char)
+            seen_right.add(right_char)
+
+            left = left.next
+            right = right.prev
+
+        return True
+
 
 if __name__ == "__main__":
     input_str = input("Enter a string: ")
